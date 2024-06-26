@@ -1,0 +1,20 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  annotations:
+    maistra.io/gateway-name: bookinfo-gateway-dr
+    maistra.io/gateway-namespace: bookinfo
+  labels:
+    app: productpage
+    service: productpage
+  name: productpage-dr
+  namespace: bookinfo
+spec:
+  host: productpage-dr.apps.cluster-99549.dynamic.redhatworkshops.io
+  port:
+    targetPort: http2 # or https
+  to:
+    kind: Service
+    name: ingressgateway
+    weight: 100
+  wildcardPolicy: None
