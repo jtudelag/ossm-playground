@@ -1,0 +1,50 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: secure-bookinfo-gateway
+  namespace: bookinfo
+spec:
+  # The selector matches the ingress gateway pod labels.
+  # If you installed Istio using Helm following the standard documentation, this would be "istio=ingress"
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+  - port:
+      number: 443
+      name: https
+      protocol: HTTPS
+    hosts:
+    - "secure-productpage.apps.cluster-99549.dynamic.redhatworkshops.io"
+    tls:
+      mode: SIMPLE
+      credentialName: productpage-gw-secret
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: secure-bookinfo
+  namespace: bookinfo
+spec:
+  hosts:
+  - "secure-productpage.apps.cluster-99549.dynamic.redhatworkshops.io"
+  gateways:
+  - secure-bookinfo-gateway
+  http:
+  - match:
+    - uri:
+        exact: /productpage
+    - uri:
+        prefix: /static
+    - uri:
+        exact: /login
+    - uri:
+        exact: /logout
+    - uri:
+        prefix: /api/v1/products
+    route:
+    - destination:
+        host: productpage
+        port:
+          number: 9080
+...
