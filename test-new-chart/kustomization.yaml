@@ -1,0 +1,20 @@
+helmGlobals:
+  chartHome: ../charts/
+
+# This can be set instead of the namespace inside the helmCharts,
+# but this will apply to all the charts define din this kustomization.yaml file.
+namespace: kustomization-level-namespace
+
+# Use --load-restrictor LoadRestrictionsNone when there is no values.yaml in the root directory of kustomize!!!
+# oc kustomize --enable-helm --load-restrictor LoadRestrictionsNone .
+
+helmCharts:
+- name: service-mesh-gateways
+  includeCRDs: false
+  # This namespce option is not working! It seems to be ignored!!
+  namespace: ignored-namespace
+  valuesFile: values.yaml
+  version: 0.1.0
+
+#resources:
+#- manifests/route.yaml
