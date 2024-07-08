@@ -1,0 +1,14 @@
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  labels:
+    istio: egressgateway
+    release: istio
+  name: egressgatewaypdb
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      istio: egressgateway
+...
